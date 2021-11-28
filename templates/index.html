@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+    <title>Face recognition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='lodash.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='immutable.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='axios.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+<ul class="tabs">
+    <li data-section="train-content">ADDING FACES</li>
+    <li data-section="recognize-content">CHECKING FACES</li>
+</ul>
+<div class="container">
+    <div id="train-content">
+       <form class="box" id="train" method="POST">
+             <h1>Adding faces</h1>
+           <div class="form-item">
+               <input id ="name-field" type="text" name="name" placeholder="Username">
+           </div>
+           <div class="form-item">
+               <input type="file" name="file" id="input-file" accept="image/*">
+           </div>
+           <div class="message">
+           </div>
+           <div class="form-action">
+             <input type="submit"  name="" value="ADD">
+           </div>
+        </form>
+    </div>
+    <div id="recognize-content">
+       <form class="box-check" id="recognize" method="POST">
+             <h1>Checking faces</h1>
+           <div class="form-item">
+               <input type="file" name="file" id="recognize-input-file" accept="image/*">
+           </div>
+           <div class="form-action">
+             <input type="submit"  name="" value="CHECK">
+           </div>
+        </form>
+    </div>
+    <div class="message_check" id="message_checking">
+    </div>
+</div>
+</body>
+</html>
