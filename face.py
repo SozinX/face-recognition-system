@@ -1,5 +1,8 @@
 import face_recognition
 from os import path
+from db import Database
+from flask import Flask, json, Response, request, render_template
+
 
 class Face:
     def __init__(self, app):
@@ -9,7 +12,7 @@ class Face:
         self.known_encoding_faces = []
         self.face_user_keys = {}
         self.load_all()
-
+        self.load_last()
 
     def load_user_by_index_key(self, index_key = 0):
         key_str = str(index_key)
@@ -30,7 +33,7 @@ class Face:
 
     def load_all(self):
         print("Hey there")
-        results = self.db.select('SELECT faces.id, faces.user_id, faces.filename, faces.created FROM faces')
+        results = self.db.select('SELECT faces.id, faces.user_id, faces.filename, faces.created FROM faces WHERE faces.id != (SELECT MAX(faces.id) FROM faces)')
         for row in results:
             print(row)
             user_id = row[1]
@@ -49,8 +52,30 @@ class Face:
             index_key_string = str(index_key)
             self.face_user_keys['{0}'.format(index_key_string)] = user_id
 
+    def load_last(self):
+        face = Flask(__name__)
+        face.db = Database()
+        print("Hey there")
+        results = face.db.select('SELECT faces.id, faces.user_id, faces.filename, faces.created FROM faces WHERE faces.id = (SELECT MAX(faces.id) FROM faces)')
+        for row in results:
+            print(row)
+            user_id = row[1]
+            filename = row[2]
+            face = {
+                "id": row[0],
+                "user_id": user_id,
+                "filename": filename,
+                "created": row[3]
+            }
+            self.faces.append(face)
+            face_image = face_recognition.load_image_file(self.load_train_file_by_name(filename))
+            face_image_encoding = face_recognition.face_encodings(face_image)[0]
+            index_key = len(self.known_encoding_faces)
+            self.known_encoding_faces.append(face_image_encoding)
+            index_key_string = str(index_key)
+            self.face_user_keys['{0}'.format(index_key_string)] = user_id
 
-    def recognize(self,unknown_filename):
+    def recognize(self, unknown_filename):
         try:
             unknown_image = face_recognition.load_image_file(self.load_unknown_file_by_name(unknown_filename))
             unknown_encoding_image = face_recognition.face_encodings(unknown_image)[0]

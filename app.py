@@ -87,6 +87,7 @@ def train():
             if user_id:
                 print("User saved in data", name, user_id, created)
                 face_id = app.db.insert("INSERT INTO faces(user_id, filename, created) VALUES (?,?,?)", [user_id, filename, created])
+                app.face.load_last()
                 if face_id:
                     print("Face has been saved")
                     face_data = {"id": face_id, "filename": filename, "created": created}
@@ -117,7 +118,6 @@ def user_profile(user_id):
 @app.route('/api/recognize', methods =['POST'])
 def recognize():
     app.db = Database()
-    app.face = Face(app)
     if 'file' not in request.files:
         return error_handle("Image is required")
     else:
