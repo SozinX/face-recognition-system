@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 app.config['file_allowed'] = ['image/png', 'image/jpeg']
 app.config['storage'] = path.join(getcwd(), 'storage')
+app.db = Database()
 app.face = Face(app)
 
 def success_handle(output, status=200, mimetype='application/json'):
